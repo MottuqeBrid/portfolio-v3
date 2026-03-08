@@ -1,11 +1,13 @@
 import About from "@/_components/About/About";
 import Hero from "@/_components/Hero/Hero";
+import Skills from "@/_components/Skills/Skills";
 
 export default function Home() {
   return (
     <div className="">
       <Hero id="home" />
       <About id="about" />
+      <Skills id="skills" />
     </div>
   );
 }
