@@ -4,7 +4,6 @@ import Link from "next/link";
 export default function Logo({
   href,
   classes,
-  size,
   imgClass,
 }: {
   href: string;
@@ -16,9 +15,9 @@ export default function Logo({
   return (
     <Link href={href || "/"} className={classes}>
       <Image
-        className={` ${size === "large" ? "w-40" : "w-24"} ${imgClass || ""}`}
+        className={` ${imgClass || ""}`}
         src="/logo_t.png"
-        alt="Next.js logo"
+        alt="logo"
         width={100}
         height={20}
         priority

@@ -19,7 +19,7 @@ const navItems = [
 export default function Navbar() {
   return (
     <div className="bg-base-100/90 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-base-200">
-      <div className="navbar bg-base-100 shadow-sm">
+      <div className="navbar px-2 sm:px-4 shadow-sm">
         <div className="navbar-start">
           <div className="dropdown">
             <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -50,7 +50,7 @@ export default function Navbar() {
               ))}
             </ul>
           </div>
-          <Logo />
+          <Logo href="/" imgClass="w-16" />
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
