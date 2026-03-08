@@ -1,26 +1,189 @@
 @import "tailwindcss";
+@plugin "daisyui";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* GBA Theme - Light and Dark Mode */
+
+@plugin "daisyui/theme" {
+  name: "light";
+  default: true;
+  /* Light Theme - Primary Colors */
+  --color-primary: #0ea5e9; /* Cyan-blue from logo */
+  --color-primary-dark: #0284c7;
+  --color-primary-light: #06b6d4;
+
+  /* Navy Blue - Secondary */
+  --color-secondary: #1e3a5f; /* Dark navy from logo ring */
+  --color-secondary-dark: #0f2438;
+  --color-secondary-light: #2d5a8c;
+
+  /* Gold/Orange - Accent */
+  --color-accent: #f59e0b; /* Gold from stars */
+  --color-accent-dark: #d97706;
+  --color-accent-light: #fbbf24;
+
+  /* Light Theme Backgrounds */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-tertiary: #e2e8f0;
+
+  /* Light Theme Text */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary: #64748b;
+
+  /* Light Theme Borders */
+  --border-color: #e2e8f0;
+  --border-dark: #cbd5e1;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@plugin "daisyui/theme" {
+  name: "dark";
+  /* Dark Theme - Primary Colors */
+  --color-primary: #06b6d4; /* Brighter cyan for dark mode */
+  --color-primary-dark: #0891b2;
+  --color-primary-light: #22d3ee;
+
+  /* Navy Blue - Secondary (lighter for dark mode) */
+  --color-secondary: #3b82f6; /* Brighter blue for dark mode */
+  --color-secondary-dark: #1e40af;
+  --color-secondary-light: #60a5fa;
+
+  /* Gold/Orange - Accent (brighter for dark mode) */
+  --color-accent: #fbbf24; /* Lighter gold for dark mode */
+  --color-accent-dark: #f59e0b;
+  --color-accent-light: #fcd34d;
+
+  /* Dark Theme Backgrounds */
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+
+  /* Dark Theme Text */
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
+
+  /* Dark Theme Borders */
+  --border-color: #334155;
+  --border-dark: #475569;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Base Styles */
+* {
+  @apply transition-colors duration-200;
+}
+
+html {
+  @apply scroll-smooth;
+}
+
+.active {
+  font-weight: 600;
+  color: var(--color-accent);
+  text-decoration: underline !important;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  @apply bg-[var(--bg-primary)] text-[var(--text-primary)];
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply font-bold text-[var(--text-primary)];
+}
+
+h1 {
+  @apply text-4xl md:text-5xl;
+  background: linear-gradient(
+    135deg,
+    var(--color-primary),
+    var(--color-secondary)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+h2 {
+  @apply text-3xl md:text-4xl;
+  color: var(--color-primary);
+}
+
+h3 {
+  @apply text-2xl md:text-3xl;
+  color: var(--color-secondary);
+}
+
+/* Buttons - Using DaisyUI classes with custom colors */
+.btn {
+  @apply font-semibold transition-all duration-200;
+}
+
+.btn-primary {
+  @apply bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white border-0;
+}
+
+.btn-secondary {
+  @apply bg-[var(--color-secondary)] hover:bg-[var(--color-secondary-dark)] text-white border-0;
+}
+
+.btn-accent {
+  @apply bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)] text-white border-0;
+}
+
+.btn-outline {
+  @apply border-2 border-[var(--color-primary)] text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white;
+}
+
+/* Cards */
+.card {
+  @apply bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200;
+}
+
+.card-body {
+  @apply p-6;
+}
+
+/* Inputs */
+input,
+textarea,
+select {
+  @apply bg-[var(--bg-secondary)] text-[var(--text-primary)] border border-[var(--border-color)] rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent;
+}
+
+/* Navigation */
+nav {
+  @apply bg-[var(--bg-secondary)] border-b border-[var(--border-color)] shadow-sm;
+}
+
+/* Divider */
+hr {
+  @apply border-[var(--border-color)];
+}
+
+/* Scroll Bar Styling */
+::-webkit-scrollbar {
+  @apply w-2 h-2;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-[var(--bg-secondary)];
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-[var(--color-primary)] rounded-full hover:bg-[var(--color-primary-dark)];
+}
+
+.padding-inline {
+  padding-inline: 0;
 }
