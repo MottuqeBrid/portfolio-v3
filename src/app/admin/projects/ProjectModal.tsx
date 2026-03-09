@@ -1,10 +1,8 @@
+import imgbbImageUpload from "@/lib/imgbbImageUpload";
 import { ProjectInstance } from "@/models/Projects.Models";
+import Image from "next/image";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { FiLoader, FiPlus, FiSave, FiX } from "react-icons/fi";
-
-type ProjectRecord = ProjectInstance & {
-  _id?: string;
-};
 
 type ProjectFormValues = {
   title: string;
@@ -13,7 +11,7 @@ type ProjectFormValues = {
   thumbnail: string;
   techStack: string;
   keyFeatures: string;
-  images: string;
+  images: string[];
   live: string;
   source: string;
   githubClient: string;
@@ -29,7 +27,7 @@ const initialFormValues: ProjectFormValues = {
   thumbnail: "",
   techStack: "",
   keyFeatures: "",
-  images: "",
+  images: [],
   live: "",
   source: "",
   githubClient: "",
@@ -45,7 +43,7 @@ function parseList(value: string, separator: RegExp) {
     .filter(Boolean);
 }
 
-function toFormValues(project?: ProjectRecord | null): ProjectFormValues {
+function toFormValues(project?: ProjectInstance | null): ProjectFormValues {
   if (!project) {
     return initialFormValues;
   }
@@ -57,7 +55,8 @@ function toFormValues(project?: ProjectRecord | null): ProjectFormValues {
     thumbnail: project.thumbnail,
     techStack: project.techStack.join(", "),
     keyFeatures: project.keyFeatures.join("\n"),
-    images: project.images.join("\n"),
+    images: project.images,
+    // images: project.images.join("\n"),
     live: project.links?.live ?? "",
     source: project.links?.source ?? "",
     githubClient: project.links?.githubClient ?? "",
@@ -73,8 +72,8 @@ export default function ProjectModal({
   project,
 }: {
   closeModal: () => void;
-  onSaved: (project: ProjectRecord) => void;
-  project: ProjectRecord | null;
+  onSaved: (project: ProjectInstance) => void;
+  project: ProjectInstance | null;
 }) {
   const [formValues, setFormValues] = useState<ProjectFormValues>(
     toFormValues(project),
@@ -89,10 +88,29 @@ export default function ProjectModal({
 
   const isEditing = Boolean(project?._id);
 
-  function handleChange(
+  async function handleChange(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) {
     const { name, value, type } = event.target;
+
+    if (type === "file" && name == "thumbnail") {
+      const file = (event.target as HTMLInputElement).files?.[0];
+      const url = await imgbbImageUpload(file as File);
+      setFormValues((current) => ({
+        ...current,
+        thumbnail: url,
+      }));
+      return;
+    }
+    if (type === "file" && name == "images") {
+      const file = (event.target as HTMLInputElement).files?.[0];
+      const url = await imgbbImageUpload(file as File);
+      setFormValues((current) => ({
+        ...current,
+        images: [url, ...current.images],
+      }));
+      return;
+    }
 
     setFormValues((current) => ({
       ...current,
@@ -107,20 +125,15 @@ export default function ProjectModal({
     event.preventDefault();
     setIsSubmitting(true);
     setSubmitError(null);
-
-    const now = new Date().toISOString();
-
-    const payload: ProjectRecord & { id?: string } = {
-      id: project?._id,
+    const payload: Omit<ProjectInstance, "_id" | "createdAt" | "updatedAt"> = {
+      id: project?._id ?? undefined,
       title: formValues.title.trim(),
       description: formValues.description.trim(),
       longDescription: formValues.longDescription.trim(),
       thumbnail: formValues.thumbnail.trim(),
       techStack: parseList(formValues.techStack, /,/),
       keyFeatures: parseList(formValues.keyFeatures, /\n|,/),
-      images: parseList(formValues.images, /\n|,/),
-      createdAt: project?.createdAt ?? now,
-      updatedAt: now,
+      images: formValues.images,
       links: {
         live: formValues.live.trim(),
         source: formValues.source.trim(),
@@ -156,6 +169,13 @@ export default function ProjectModal({
     }
   }
 
+  const handleDeleteImages = (newImageUrl: string) => {
+    setFormValues((current) => ({
+      ...current,
+      images: [...current.images.filter((url) => url !== newImageUrl)],
+    }));
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 p-4 backdrop-blur-sm">
       <button
@@ -172,13 +192,13 @@ export default function ProjectModal({
           type="button"
           onClick={closeModal}
           aria-label="Close add project modal"
-          className="absolute right-4 top-4 inline-flex rounded-full border border-base-300 bg-base-200 p-2 text-base-content/70 transition-colors hover:bg-base-300"
+          className="absolute right-4 top-4 inline-flex rounded-full border border-base-300 bg-base-200 p-3 cursor-pointer z-60 text-red-500/70 transition-colors hover:bg-base-300"
         >
-          <FiX size={18} />
+          <FiX size={24} />
         </button>
 
         <div className="relative grid gap-8 xl:grid-cols-[0.95fr_1.45fr]">
-          <aside className="rounded-4xl border border-base-300 bg-base-200/65 p-6">
+          <aside className="rounded-4xl border border-base-300 bg-base-200/65 p-4">
             <span className="inline-flex rounded-full border border-primary/20 bg-primary/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.22em] text-primary">
               {isEditing ? "Edit project" : "Add project"}
             </span>
@@ -187,11 +207,11 @@ export default function ProjectModal({
                 ? "Refine the project record and publish the latest changes."
                 : "Create a project entry with complete portfolio metadata."}
             </h2>
-            <p className="mt-4 text-base leading-8 text-base-content/75">
+            {/* <p className="mt-4 text-base leading-8 text-base-content/75">
               Keep titles, links, features, and visibility settings aligned so
               the admin view and public portfolio present the same source of
               truth.
-            </p>
+            </p> */}
 
             <div className="mt-6 space-y-4 rounded-3xl border border-base-300 bg-base-100/80 p-5 text-sm text-base-content/70">
               <div>
@@ -271,16 +291,36 @@ export default function ProjectModal({
                   <span className="font-medium text-base-content">
                     Thumbnail URL
                   </span>
-                  <input
+                  {/* <input
                     type="url"
                     name="thumbnail"
                     value={formValues.thumbnail}
                     onChange={handleChange}
                     placeholder="https://..."
                     className="w-full rounded-2xl border border-base-300 bg-base-200/70 px-4 py-3 text-base-content placeholder:text-base-content/40 focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  /> */}
+                  <input
+                    type="file"
+                    name="thumbnail"
+                    // value={formValues.thumbnail}
+                    onChange={handleChange}
+                    className="w-full rounded-2xl border border-base-300 bg-base-200/70 px-4 py-3 text-base-content placeholder:text-base-content/40 focus:border-primary focus:ring-2 focus:ring-primary/20"
                   />
+                  {formValues.thumbnail && (
+                    <div className="w-full py-4 ">
+                      <p className="text-xs text-base-content/70">
+                        Preview of the thumbnail image
+                      </p>
+                      <Image
+                        src={formValues?.thumbnail}
+                        width={400}
+                        height={400}
+                        alt={formValues.title || "Thumbnail preview"}
+                        className="rounded-2xl mt-2 border border-base-300 bg-base-100/80 object-cover shadow-lg shadow-base-300/20"
+                      />
+                    </div>
+                  )}
                 </label>
-
                 <label className="space-y-2 text-sm text-base-content/75">
                   <span className="font-medium text-base-content">
                     Tech stack
@@ -314,14 +354,51 @@ export default function ProjectModal({
                   <span className="font-medium text-base-content">
                     Image URLs
                   </span>
-                  <textarea
+                  {/* <textarea
                     name="images"
                     value={formValues.images}
                     onChange={handleChange}
                     rows={4}
                     placeholder={"https://...\nhttps://..."}
                     className="w-full rounded-2xl border border-base-300 bg-base-200/70 px-4 py-3 text-base-content placeholder:text-base-content/40 focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  /> */}
+                  <input
+                    type="file"
+                    name="images"
+                    onChange={handleChange}
+                    className="w-full rounded-2xl border border-base-300 bg-base-200/70 px-4 py-3 text-base-content placeholder:text-base-content/40 focus:border-primary focus:ring-2 focus:ring-primary/20"
                   />
+                  {formValues?.images?.length > 0 && (
+                    <div className="w-full">
+                      <p className="text-xs text-base-content/70">
+                        Preview of the images
+                      </p>
+                      <small>
+                        {JSON.stringify(formValues?.images, null, 2) ||
+                          formValues?.images}
+                      </small>
+                      <div className="w-full grid grid-col-2s md:grid-cols-3 gap-4 mt-2">
+                        {formValues?.images?.map((imgUrl, index) => (
+                          <div key={index} className=" w-full relative group">
+                            <Image
+                              width={400}
+                              height={400}
+                              alt={`${formValues.title} image ${index + 1}`}
+                              src={imgUrl}
+                              className="rounded-2xl mt-2 border border-base-300 bg-base-100/80 object-cover shadow-lg shadow-base-300/20"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteImages(imgUrl)}
+                              className="absolute -top-2 -right-2 bg-red-500/80 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                            >
+                              <FiX size={16} />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </label>
 
                 <label className="space-y-2 text-sm text-base-content/75">

@@ -14,6 +14,7 @@ import {
 import ProjectModal from "./ProjectModal";
 import { MdDelete } from "react-icons/md";
 import { formatDate } from "@/lib/formatDate";
+import Image from "next/image";
 
 type ProjectRecord = ProjectInstance & {
   _id?: string;
@@ -138,11 +139,8 @@ export default function ProjectsPage() {
   ];
 
   return (
-    <section
-      className="p-4 sm:p-6 lg:p-8"
-      aria-labelledby="admin-projects-heading"
-    >
-      <div className="relative overflow-hidden rounded-4xl border border-base-300/70 bg-base-100/95 p-6 shadow-xl shadow-base-300/20 sm:p-8">
+    <section className="" aria-labelledby="admin-projects-heading">
+      <div className="relative overflow-hidden border border-base-300/70 bg-base-100/95 p-4 shadow-xl shadow-base-300/20 sm:p-6">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(98,176,198,0.18),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(33,29,29,0.1),transparent_35%)]" />
 
         <div className="relative space-y-8">
@@ -151,29 +149,15 @@ export default function ProjectsPage() {
               <span className="inline-flex rounded-full border border-primary/20 bg-primary/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.24em] text-primary">
                 Admin projects
               </span>
-              <h1
-                id="admin-projects-heading"
-                className="max-w-4xl text-3xl font-bold tracking-tight text-base-content sm:text-4xl lg:text-5xl"
-              >
-                Curate the portfolio collection with a cleaner create and edit
-                workflow.
-              </h1>
-              <p className="max-w-2xl text-base leading-8 text-base-content/75 sm:text-lg">
-                Review publishing status, keep project metadata consistent, and
-                update portfolio entries without leaving the admin area.
-              </p>
             </div>
 
-            <div className="flex flex-wrap gap-3">
-              <div className="rounded-3xl border border-base-300 bg-base-200/70 px-5 py-4 text-sm text-base-content/70">
-                <p className="font-semibold uppercase tracking-[0.18em] text-primary">
-                  Collection health
-                </p>
-                <p className="mt-2 max-w-xs leading-6">
-                  Keep the public list balanced between finished work and active
-                  experiments.
-                </p>
-              </div>
+            <div className="flex flex-wrap justify-between gap-3">
+              <h1
+                id="admin-projects-heading"
+                className="text-3xl font-bold leading-tight tracking-tight text-base-content sm:text-4xl"
+              >
+                Portfolio projects
+              </h1>
               <button
                 type="button"
                 onClick={openCreateModal}
@@ -245,41 +229,45 @@ export default function ProjectsPage() {
               {projects.map((project) => (
                 <article
                   key={project._id ?? `${project.title}-${project.createdAt}`}
-                  className="rounded-4xl border border-base-300 bg-base-100/85 p-5 shadow-sm transition-transform hover:-translate-y-0.5"
+                  className="rounded-4xl border border-base-300 bg-base-100/85 p-4 shadow-sm transition-transform hover:-translate-y-0.5"
                 >
-                  <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
-                    <div className="space-y-3">
-                      <div className="flex flex-wrap items-center gap-3 text-sm">
-                        <span className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 font-semibold uppercase tracking-[0.18em] text-primary">
-                          {project.title}
-                        </span>
-                        <span
-                          className={`rounded-full px-3 py-1 font-semibold uppercase tracking-[0.18em] ${
-                            project.isCompleted
-                              ? "bg-emerald-500/15 text-emerald-600"
-                              : "bg-amber-500/15 text-amber-600"
-                          }`}
-                        >
-                          {project.isCompleted ? "Completed" : "In progress"}
-                        </span>
-                        <span
-                          className={`rounded-full px-3 py-1 font-semibold uppercase tracking-[0.18em] ${
-                            project.showInUI
-                              ? "bg-sky-500/15 text-sky-600"
-                              : "bg-base-300 text-base-content/60"
-                          }`}
-                        >
-                          {project.showInUI ? "Visible" : "Hidden"}
-                        </span>
-                      </div>
-                      <p className="max-w-2xl text-sm leading-7 text-base-content/75 sm:text-base">
-                        {project.description}
-                      </p>
+                  <div className="space-y-3">
+                    <div className="flex flex-wrap items-center gap-3 text-sm">
+                      <span className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 font-semibold uppercase tracking-[0.18em] text-primary">
+                        {project.title}
+                      </span>
+                      <span
+                        className={`rounded-full px-3 py-1 font-semibold uppercase tracking-[0.18em] ${
+                          project.isCompleted
+                            ? "bg-emerald-500/15 text-emerald-600"
+                            : "bg-amber-500/15 text-amber-600"
+                        }`}
+                      >
+                        {project.isCompleted ? "Completed" : "In progress"}
+                      </span>
+                      <span
+                        className={`rounded-full px-3 py-1 font-semibold uppercase tracking-[0.18em] ${
+                          project.showInUI
+                            ? "bg-sky-500/15 text-sky-600"
+                            : "bg-base-300 text-base-content/60"
+                        }`}
+                      >
+                        {project.showInUI ? "Visible" : "Hidden"}
+                      </span>
                     </div>
-
-                    <div className="rounded-2xl border border-base-300 bg-base-200/80 px-4 py-3 text-sm text-base-content/70">
-                      <p>Updated {formatDate(project.updatedAt)}</p>
+                    <div className="w-full">
+                      <Image
+                        src={project.thumbnail || "/placeholder.png"}
+                        alt={project.title}
+                        width={800}
+                        height={500}
+                        className="aspect-video w-full rounded-2xl object-cover shadow-2xl shadow-base-300/20"
+                      />
                     </div>
+                    <h3 className="text-2xl font-bold mt-6">Description</h3>
+                    <p className="w-full text-sm text-justify leading-7 text-base-content/75 sm:text-base">
+                      {project.description}
+                    </p>
                   </div>
 
                   <div className="mt-5 grid gap-4 md:grid-cols-[1.1fr_0.9fr]">
@@ -349,19 +337,24 @@ export default function ProjectsPage() {
                     ) : null}
                   </div>
 
-                  <div className="mt-5 flex justify-end gap-2">
-                    <button className="inline-flex items-center gap-2 rounded-full border border-primary bg-red-400 px-4 py-2 text-sm font-semibold text-base-content transition-colors hover:bg-primary/85">
-                      <MdDelete size={16} />
-                      <span>Delete Project</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => openEditModal(project)}
-                      className="inline-flex items-center gap-2 rounded-full border border-primary bg-primary px-4 py-2 text-sm font-semibold text-primary-content transition-colors hover:bg-primary/85"
-                    >
-                      <FiEdit size={16} />
-                      Edit project
-                    </button>
+                  <div className="flex w-full flex-col sm:flex-row justify-between items-center mt-5">
+                    <div className="rounded-2xl border border-base-300 bg-base-200/80 px-4 py-3 text-sm text-base-content/70">
+                      <p>Updated {formatDate(project.updatedAt)}</p>
+                    </div>
+                    <div className="mt-5 flex justify-end gap-2">
+                      <button className="inline-flex items-center gap-2 rounded-full border border-primary bg-red-400 px-4 py-2 text-sm font-semibold text-base-content transition-colors hover:bg-primary/85">
+                        <MdDelete size={16} />
+                        <span>Delete Project</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => openEditModal(project)}
+                        className="inline-flex items-center gap-2 rounded-full border border-primary bg-primary px-4 py-2 text-sm font-semibold text-primary-content transition-colors hover:bg-primary/85"
+                      >
+                        <FiEdit size={16} />
+                        Edit project
+                      </button>
+                    </div>
                   </div>
                 </article>
               ))}

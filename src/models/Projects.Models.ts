@@ -53,6 +53,7 @@ export type ProjectLinks = {
 };
 
 export type ProjectInstance = {
+  id: string | undefined;
   title: string;
   description: string;
   longDescription: string;
@@ -65,6 +66,7 @@ export type ProjectInstance = {
   links: ProjectLinks;
   isCompleted: boolean;
   showInUI?: boolean;
+  _id: string;
 };
 
 // export type ProjectFormValues = {
