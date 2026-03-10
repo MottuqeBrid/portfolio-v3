@@ -5,6 +5,7 @@ import { MdEmail } from "react-icons/md";
 import NavLink from "@/_components/NavLink/NavLink";
 import Logo from "@/_components/Logo/Logo";
 import ThemeToggle from "@/_components/ThemeToggle/ThemeToggle";
+import ResumeBtn from "@/_components/ResumeBtn/ResumeBtn";
 
 const navItems = [
   { href: "/", label: "Home", icon: <FaHome /> },
@@ -62,12 +63,12 @@ export default function AdminNavbar() {
             ))}
           </ul>
         </div>
-        <div className="navbar-end">
-          <ThemeToggle />
-          <button className="btn">
+        <div className="navbar-end gap-2 flex">
+          <ThemeToggle variant="button" />
+          <ResumeBtn className="btn">
             <FaDownload />
             <span>Resume</span>
-          </button>
+          </ResumeBtn>
         </div>
       </div>
     </div>

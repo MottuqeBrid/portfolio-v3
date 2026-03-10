@@ -66,8 +66,8 @@ export default function Navbar() {
             ))}
           </ul>
         </div>
-        <div className="navbar-end">
-          <ThemeToggle />
+        <div className="navbar-end gap-2 flex">
+          <ThemeToggle variant="button" />
           <ResumeBtn className="btn">
             <FaDownload />
             <span>Resume</span>
