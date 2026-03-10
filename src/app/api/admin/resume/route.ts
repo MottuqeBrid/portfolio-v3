@@ -11,7 +11,7 @@ export async function GET() {
 
     return NextResponse.json({ resume }, { status: 200 });
   } catch (error) {
-    console.error("Failed to fetch resume:", error);
+    // console.error("Failed to fetch resume:", error);
     return NextResponse.json(
       { message: "Internal Server Error" },
       { status: 500 },
@@ -54,7 +54,7 @@ export async function PUT(req: NextRequest) {
       { status: 200 },
     );
   } catch (error) {
-    console.error("Failed to update resume:", error);
+    // console.error("Failed to update resume:", error);
     return NextResponse.json(
       { message: "Internal Server Error" },
       { status: 500 },

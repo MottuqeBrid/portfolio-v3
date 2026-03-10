@@ -67,7 +67,7 @@ export async function GET() {
       { status: 200 },
     );
   } catch (error) {
-    console.error("Failed to fetch admin statistics:", error);
+    // console.error("Failed to fetch admin statistics:", error);
     return NextResponse.json(
       { message: "Internal Server Error" },
       { status: 500 },

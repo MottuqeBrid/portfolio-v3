@@ -19,7 +19,6 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const payload = await req.json();
-
     if (!payload?.name?.trim()) {
       return NextResponse.json(
         { message: "Name is required" },
@@ -55,7 +54,7 @@ export async function POST(req: NextRequest) {
       email: payload.email.trim(),
       subject: payload.subject.trim(),
       message: payload.message.trim(),
-      isRead: Boolean(payload.isRead),
+      isRead: false,
     });
 
     return NextResponse.json(
@@ -63,7 +62,7 @@ export async function POST(req: NextRequest) {
       { status: 201 },
     );
   } catch (error) {
-    console.error("Failed to create email:", error);
+    // console.error("Failed to create email:", error);
     return NextResponse.json(
       { message: "Internal Server Error" },
       { status: 500 },
@@ -106,7 +105,7 @@ export async function PATCH(req: NextRequest) {
       { status: 200 },
     );
   } catch (error) {
-    console.error("Failed to update email:", error);
+    // console.error("Failed to update email:", error);
     return NextResponse.json(
       { message: "Internal Server Error" },
       { status: 500 },
@@ -139,7 +138,7 @@ export async function DELETE(req: NextRequest) {
       { status: 200 },
     );
   } catch (error) {
-    console.error("Failed to delete email:", error);
+    // console.error("Failed to delete email:", error);
     return NextResponse.json(
       { message: "Internal Server Error" },
       { status: 500 },

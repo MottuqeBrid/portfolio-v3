@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
       { status: 201 },
     );
   } catch (error) {
-    console.error("Failed to create project:", error);
+    // console.error("Failed to create project:", error);
     return NextResponse.json(
       { message: "Internal Server Error" },
       { status: 500 },
@@ -63,7 +63,7 @@ export async function GET(req: NextRequest) {
     const projects = await Projects.find(query).sort({ createdAt: -1 });
     return NextResponse.json(projects, { status: 200 });
   } catch (error) {
-    console.error("Failed to fetch projects:", error);
+    // console.error("Failed to fetch projects:", error);
     return NextResponse.json(
       { message: "Internal Server Error" },
       { status: 500 },
@@ -95,7 +95,7 @@ export async function DELETE(req: NextRequest) {
       { status: 200 },
     );
   } catch (error) {
-    console.error("Failed to delete project:", error);
+    // console.error("Failed to delete project:", error);
     return NextResponse.json(
       { message: "Internal Server Error" },
       { status: 500 },
@@ -128,7 +128,7 @@ export async function PATCH(req: NextRequest) {
       { status: 200 },
     );
   } catch (error) {
-    console.error("Failed to update project:", error);
+    // console.error("Failed to update project:", error);
     return NextResponse.json(
       { message: "Internal Server Error" },
       { status: 500 },

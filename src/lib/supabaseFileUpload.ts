@@ -8,10 +8,10 @@ export const fileUpload = async (file: File) => {
     .from("portfolio")
     .upload(fileName, file);
   if (error) {
-    console.log("Upload error:", error);
+    // console.log("Upload error:", error);
     return "";
   } else {
-    console.log("Uploaded:", data);
+    // console.log("Uploaded:", data);
     const { data: imgData } = await supabase.storage
       .from("portfolio")
       .getPublicUrl(fileName);

@@ -8,7 +8,7 @@ export async function GET() {
     const notes = await Note.find({}).sort({ createdAt: -1 });
     return NextResponse.json(notes, { status: 200 });
   } catch (error) {
-    console.error("Failed to fetch notes:", error);
+    // console.error("Failed to fetch notes:", error);
     return NextResponse.json(
       { message: "Internal Server Error" },
       { status: 500 },
@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
       { status: 201 },
     );
   } catch (error) {
-    console.error("Failed to create note:", error);
+    // console.error("Failed to create note:", error);
     return NextResponse.json(
       { message: "Internal Server Error" },
       { status: 500 },
@@ -87,7 +87,7 @@ export async function DELETE(req: NextRequest) {
       { status: 200 },
     );
   } catch (error) {
-    console.error("Failed to delete note:", error);
+    // console.error("Failed to delete note:", error);
     return NextResponse.json(
       { message: "Internal Server Error" },
       { status: 500 },
@@ -149,7 +149,7 @@ export async function PATCH(req: NextRequest) {
       { status: 200 },
     );
   } catch (error) {
-    console.error("Failed to update note:", error);
+    // console.error("Failed to update note:", error);
     return NextResponse.json(
       { message: "Internal Server Error" },
       { status: 500 },

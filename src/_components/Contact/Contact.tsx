@@ -67,7 +67,7 @@ export default function Contact({ id }: { id: string }) {
       subject: formValues.subject,
       message: formValues.message,
     };
-    const res = await fetch("/api/email", {
+    const res = await fetch("/api/emails", {
       method: "POST",
       body: JSON.stringify(patlod),
       headers: {

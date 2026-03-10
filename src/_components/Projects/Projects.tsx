@@ -43,7 +43,7 @@ export default function Projects({ id }: { id: string }) {
       const data = await response.json();
       setProjects(data);
     } catch (error) {
-      console.error("Error fetching projects:", error);
+      // console.error("Error fetching projects:", error);
     }
   };
   useEffect(() => {
