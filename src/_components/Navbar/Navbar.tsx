@@ -7,6 +7,7 @@ import { GiSkills } from "react-icons/gi";
 import { GoProject } from "react-icons/go";
 import { BiPhoneCall } from "react-icons/bi";
 import ThemeToggle from "../ThemeToggle/ThemeToggle";
+import ResumeBtn from "../ResumeBtn/ResumeBtn";
 
 const navItems = [
   { href: "/#home", label: "Home", icon: <FaHome /> },
@@ -67,10 +68,10 @@ export default function Navbar() {
         </div>
         <div className="navbar-end">
           <ThemeToggle />
-          <button className="btn">
+          <ResumeBtn className="btn">
             <FaDownload />
             <span>Resume</span>
-          </button>
+          </ResumeBtn>
         </div>
       </div>
     </div>

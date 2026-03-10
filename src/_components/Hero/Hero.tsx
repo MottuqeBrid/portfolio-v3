@@ -6,6 +6,7 @@ import { LiaNodeJs } from "react-icons/lia";
 import Typewriter from "typewriter-effect";
 import { BiDownArrow } from "react-icons/bi";
 import { BsGithub, BsLinkedin, BsWhatsapp } from "react-icons/bs";
+import ResumeBtn from "../ResumeBtn/ResumeBtn";
 
 const roleTitles = [
   "Next.js Developer",
@@ -50,7 +51,7 @@ export default function Hero({ id }: { id: string }) {
       initial={{ opacity: 0, y: 28 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7, ease: "easeOut" }}
-      className="flex min-h-dvh flex-col items-center justify-center gap-8 overflow-hidden rounded-lg bg-base-100 py-8 sm:flex-row"
+      className="flex min-h-[80dvh] flex-col items-center justify-center gap-8 overflow-hidden rounded-lg bg-base-100 py-8 sm:flex-row"
     >
       <Motion.div
         initial={{ opacity: 0, x: -24 }}
@@ -176,7 +177,7 @@ export default function Hero({ id }: { id: string }) {
         </div>
 
         <div className="flex gap-2">
-          <button className="btn btn-primary">Download Resume</button>
+          <ResumeBtn className="btn btn-primary">Download Resume</ResumeBtn>
           <button className="btn btn-outline flex items-center justify-center gap-2">
             View My Work <BiDownArrow />
           </button>

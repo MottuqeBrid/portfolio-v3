@@ -1,7 +1,7 @@
 import type { IconType } from "react-icons";
 import { BsTools } from "react-icons/bs";
 import { DiPython } from "react-icons/di";
-import { FiCode, FiDatabase, FiLayers, FiTool } from "react-icons/fi";
+import { FiCode, FiLayers, FiTool } from "react-icons/fi";
 import {
   SiExpress,
   SiFirebase,
@@ -52,7 +52,7 @@ const skillGroups: SkillGroup[] = [
     ],
   },
   {
-    title: "Backend and APIs",
+    title: "Backend and APIs  and Database",
     description:
       "Building practical server-side features, integrating APIs, and delivering reliable application flows end to end.",
     Icon: FiCode,
@@ -61,18 +61,19 @@ const skillGroups: SkillGroup[] = [
       { name: "Express.js", icon: SiExpress, tint: "#444444" },
       { name: "Firebase", icon: SiFirebase, tint: "#ffca28" },
       { name: "Postman", icon: SiPostman, tint: "#ff6c37" },
-    ],
-  },
-  {
-    title: "Data and storage",
-    description:
-      "Working with flexible data models and service-backed persistence for full-stack application development.",
-    Icon: FiDatabase,
-    skills: [
       { name: "MongoDB", icon: SiMongodb, tint: "#00ed64" },
-      //   { name: "Firebase DB", icon: SiFirebase, tint: "#ffca28" },
     ],
   },
+  // {
+  //   title: "Data and storage",
+  //   description:
+  //     "Working with flexible data models and service-backed persistence for full-stack application development.",
+  //   Icon: FiDatabase,
+  //   skills: [
+  //     { name: "MongoDB", icon: SiMongodb, tint: "#00ed64" },
+  //     //   { name: "Firebase DB", icon: SiFirebase, tint: "#ffca28" },
+  //   ],
+  // },
   {
     title: "Workflow and tooling",
     description:
