@@ -3,6 +3,7 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import { BsGithub, BsLinkedin, BsWhatsapp } from "react-icons/bs";
 import { FiArrowUpRight, FiMapPin } from "react-icons/fi";
+import Swal from "sweetalert2";
 
 const contactChannels = [
   {
@@ -57,22 +58,37 @@ export default function Contact({ id }: { id: string }) {
     }));
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const whatsappMessage = [
-      "Hello Mottuqe, I would like to discuss a web project.",
-      `Name: ${formValues.name}`,
-      `Email: ${formValues.email}`,
-      `Subject: ${formValues.subject}`,
-      `Message: ${formValues.message}`,
-    ].join("\n");
+    const patlod = {
+      name: formValues.name,
+      email: formValues.email,
+      subject: formValues.subject,
+      message: formValues.message,
+    };
+    const res = await fetch("/api/email", {
+      method: "POST",
+      body: JSON.stringify(patlod),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-    window.open(
-      `https://wa.me/8801308133343?text=${encodeURIComponent(whatsappMessage)}`,
-      "_blank",
-      "noopener,noreferrer",
-    );
+    if (res.ok) {
+      setFormValues(initialFormValues);
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: "Email sent successfully",
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Failed to send email. Please try again later.",
+      });
+    }
   }
 
   return (
@@ -92,33 +108,6 @@ export default function Contact({ id }: { id: string }) {
               </span>
             </div>
 
-            {/* <div className="max-w-3xl space-y-4">
-              <h2
-                id="contact-heading"
-                className="text-3xl font-bold tracking-tight text-base-content sm:text-4xl lg:text-5xl"
-              >
-                Let&apos;s build a website or web app that works cleanly and
-                looks sharp.
-              </h2>
-              <p className="max-w-2xl text-base leading-8 text-base-content/75 sm:text-lg">
-                I work on modern websites and web applications with React,
-                Next.js, Node.js, Express, and MongoDB. If you need a polished
-                frontend, a responsive business site, or a full-stack web
-                solution, I&apos;m open to discussing the build.
-              </p>
-            </div> */}
-
-            {/* <div className="flex flex-wrap gap-3 text-sm text-base-content/75">
-              {workSignals.map((item) => (
-                <span
-                  key={item}
-                  className="rounded-full border border-base-300 bg-base-200/80 px-4 py-2"
-                >
-                  {item}
-                </span>
-              ))}
-            </div> */}
-
             <div className="grid gap-4 sm:grid-cols-1">
               <div className="rounded-3xl border border-base-300 bg-base-200/70 p-5 shadow-sm">
                 <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-primary">
@@ -135,23 +124,6 @@ export default function Contact({ id }: { id: string }) {
                   </p>
                 </div>
               </div>
-
-              {/* <div className="rounded-3xl border border-base-300 bg-base-100/80 p-5 shadow-sm">
-                <p className="mb-3 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.2em] text-primary">
-                  <FiMessageSquare />
-                  Good first message
-                </p>
-                <div className="space-y-3 text-sm leading-7 text-base-content/75">
-                  <p>
-                    Share what kind of website or web app you need, who it is
-                    for, and what stage the project is currently in.
-                  </p>
-                  <p>
-                    Mention your timeline, key pages or features, design status,
-                    and whether you need frontend-only or full-stack support.
-                  </p>
-                </div>
-              </div> */}
             </div>
 
             <form
@@ -162,13 +134,6 @@ export default function Contact({ id }: { id: string }) {
                 <p className="text-sm font-semibold uppercase tracking-[0.22em] text-primary">
                   Email Me
                 </p>
-                {/* <h3 className="text-2xl font-semibold text-base-content">
-                  Email Me
-                </h3> */}
-                {/* <p className="max-w-2xl text-sm leading-7 text-base-content/70 sm:text-base">
-                  Fill this out and I&apos;ll open WhatsApp with a ready-to-send
-                  message containing your project details.
-                </p> */}
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
@@ -205,6 +170,7 @@ export default function Contact({ id }: { id: string }) {
                     name="subject"
                     value={formValues.subject}
                     onChange={handleChange}
+                    required
                     placeholder="Subject of your message"
                     className="w-full rounded-2xl border border-base-300 bg-base-200/70 px-4 py-3 text-base-content placeholder:text-base-content/40 focus:border-primary focus:ring-2 focus:ring-primary/20"
                   />
@@ -227,12 +193,9 @@ export default function Contact({ id }: { id: string }) {
               </div>
 
               <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-center">
-                {/* <p className="text-sm leading-6 text-base-content/60">
-                  Submission opens WhatsApp with your project brief prefilled.
-                </p> */}
                 <button
                   type="submit"
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-content transition-transform hover:-translate-y-0.5"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-content transition-transform hover:-translate-y-0.5 cursor-pointer"
                 >
                   Send Email
                   <FiArrowUpRight size={16} />

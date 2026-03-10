@@ -1,6 +1,7 @@
 // "use client";
 import { FaHome, FaDownload, FaUserShield } from "react-icons/fa";
 import { BiNotepad } from "react-icons/bi";
+import { MdEmail } from "react-icons/md";
 import NavLink from "@/_components/NavLink/NavLink";
 import Logo from "@/_components/Logo/Logo";
 import ThemeToggle from "@/_components/ThemeToggle/ThemeToggle";
@@ -9,6 +10,7 @@ const navItems = [
   { href: "/", label: "Home", icon: <FaHome /> },
   { href: "/admin/projects", label: "Projects", icon: <FaHome /> },
   { href: "/admin/notes", label: "Notes", icon: <BiNotepad /> },
+  { href: "/admin/email", label: "Email", icon: <MdEmail /> },
   { href: "/admin", label: "Admin", icon: <FaUserShield /> },
 ];
 
