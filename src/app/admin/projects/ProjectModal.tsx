@@ -3,6 +3,8 @@ import { ProjectInstance } from "@/models/Projects.Models";
 import Image from "next/image";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { FiLoader, FiPlus, FiSave, FiX } from "react-icons/fi";
+import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 type ProjectFormValues = {
   title: string;
@@ -80,6 +82,10 @@ export default function ProjectModal({
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  // const [imageUploading, setImageUploading] = useState({
+  //   thumbnail: false,
+  //   images: false,
+  // });
 
   useEffect(() => {
     setFormValues(toFormValues(project));
@@ -93,22 +99,83 @@ export default function ProjectModal({
   ) {
     const { name, value, type } = event.target;
 
-    if (type === "file" && name == "thumbnail") {
+    if (type === "file" && name === "thumbnail") {
       const file = (event.target as HTMLInputElement).files?.[0];
-      const url = await imgbbImageUpload(file as File);
-      setFormValues((current) => ({
-        ...current,
-        thumbnail: url,
-      }));
+      if (!file) return;
+
+      const toastId = toast.loading("Uploading image...");
+
+      try {
+        // setImageUploading((current) => ({ ...current, thumbnail: true }));
+
+        const url = await imgbbImageUpload(file);
+
+        setFormValues((current) => ({
+          ...current,
+          thumbnail: url,
+        }));
+
+        toast.update(toastId, {
+          render: "Thumbnail uploaded successfully!",
+          type: "success",
+          isLoading: false,
+          autoClose: 3000,
+        });
+
+        Swal.fire({
+          title: "Thumbnail uploaded",
+          imageUrl: url,
+          confirmButtonText: "Close",
+        });
+      } catch (error) {
+        toast.update(toastId, {
+          render:
+            error instanceof Error ? error.message : "Thumbnail upload failed!",
+          type: "error",
+          isLoading: false,
+          autoClose: 4000,
+        });
+      } finally {
+        // setImageUploading((current) => ({ ...current, thumbnail: false }));
+      }
+
       return;
     }
     if (type === "file" && name == "images") {
       const file = (event.target as HTMLInputElement).files?.[0];
-      const url = await imgbbImageUpload(file as File);
-      setFormValues((current) => ({
-        ...current,
-        images: [url, ...current.images],
-      }));
+      if (!file) return;
+
+      const toastId = toast.loading("Uploading image...");
+
+      try {
+        // setImageUploading((current) => ({ ...current, images: true }));
+        const url = await imgbbImageUpload(file as File);
+        Swal.fire({
+          title: "Image uploaded",
+          imageUrl: url,
+          confirmButtonText: "Close",
+        });
+        setFormValues((current) => ({
+          ...current,
+          images: [url, ...current.images],
+        }));
+        toast.update(toastId, {
+          render: "Image uploaded successfully!",
+          type: "success",
+          isLoading: false,
+          autoClose: 3000,
+        });
+      } catch (error) {
+        toast.update(toastId, {
+          render:
+            error instanceof Error ? error.message : "Image upload failed!",
+          type: "error",
+          isLoading: false,
+          autoClose: 4000,
+        });
+      } finally {
+        // setImageUploading((current) => ({ ...current, images: false }));
+      }
       return;
     }
 
@@ -174,6 +241,7 @@ export default function ProjectModal({
       ...current,
       images: [...current.images.filter((url) => url !== newImageUrl)],
     }));
+    toast("Image removed successfully!", { type: "success" });
   };
 
   return (
@@ -291,14 +359,6 @@ export default function ProjectModal({
                   <span className="font-medium text-base-content">
                     Thumbnail URL
                   </span>
-                  {/* <input
-                    type="url"
-                    name="thumbnail"
-                    value={formValues.thumbnail}
-                    onChange={handleChange}
-                    placeholder="https://..."
-                    className="w-full rounded-2xl border border-base-300 bg-base-200/70 px-4 py-3 text-base-content placeholder:text-base-content/40 focus:border-primary focus:ring-2 focus:ring-primary/20"
-                  /> */}
                   <input
                     type="file"
                     name="thumbnail"

@@ -15,6 +15,8 @@ import ProjectModal from "./ProjectModal";
 import { MdDelete } from "react-icons/md";
 import { formatDate } from "@/lib/formatDate";
 import Image from "next/image";
+import { toast, ToastContainer } from "react-toastify";
+import Swal from "sweetalert2";
 
 type ProjectRecord = ProjectInstance & {
   _id?: string;
@@ -95,7 +97,46 @@ export default function ProjectsPage() {
     setIsModalOpen(false);
     setSelectedProject(null);
   }
-
+  const handleDeleteProject = async (id: string) => {
+    const toastId = toast.loading("Deleting project...");
+    try {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "This action cannot be undone. The project will be permanently deleted.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          const res = await fetch("/api/projects", {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ id }),
+          });
+          if (!res.ok) {
+            throw new Error("Failed to delete project");
+          }
+          toast.dismiss(toastId);
+          toast.success("Project deleted successfully");
+          setProjects((current) =>
+            current.filter((project) => project._id !== id),
+          );
+        } else {
+          toast.dismiss(toastId);
+          toast.info("Project deletion cancelled");
+        }
+      });
+    } catch (error) {
+      toast.dismiss(toastId);
+      toast.error(
+        error instanceof Error ? error.message : "Failed to delete project",
+      );
+    }
+  };
   function handleProjectSaved(project: ProjectRecord) {
     setProjects((current) => {
       const existingIndex = current.findIndex((item) => {
@@ -140,6 +181,7 @@ export default function ProjectsPage() {
 
   return (
     <section className="" aria-labelledby="admin-projects-heading">
+      <ToastContainer />
       <div className="relative overflow-hidden border border-base-300/70 bg-base-100/95 p-4 shadow-xl shadow-base-300/20 sm:p-6">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(98,176,198,0.18),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(33,29,29,0.1),transparent_35%)]" />
 
@@ -342,7 +384,10 @@ export default function ProjectsPage() {
                       <p>Updated {formatDate(project.updatedAt)}</p>
                     </div>
                     <div className="mt-5 flex justify-end gap-2">
-                      <button className="inline-flex items-center gap-2 rounded-full border border-primary bg-red-400 px-4 py-2 text-sm font-semibold text-base-content transition-colors hover:bg-primary/85">
+                      <button
+                        onClick={() => handleDeleteProject(project._id)}
+                        className="inline-flex items-center gap-2 rounded-full border border-primary bg-red-400 px-4 py-2 text-sm font-semibold text-base-content transition-colors hover:bg-primary/85"
+                      >
                         <MdDelete size={16} />
                         <span>Delete Project</span>
                       </button>
