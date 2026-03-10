@@ -15,7 +15,7 @@ const navItems = [
   { href: "/#skills", label: "Skills", icon: <GiSkills /> },
   { href: "/#projects", label: "Projects", icon: <GoProject /> },
   { href: "/#contact", label: "Contact", icon: <BiPhoneCall /> },
-  { href: "/admin", label: "Admin", icon: <FaUserShield /> },
+  // { href: "/admin", label: "Admin", icon: <FaUserShield /> },
 ];
 
 export default function Navbar() {
