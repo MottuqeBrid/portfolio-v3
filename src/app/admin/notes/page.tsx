@@ -4,6 +4,7 @@ import { formatDate } from "@/lib/formatDate";
 import { startTransition, useEffect, useMemo, useState } from "react";
 import {
   FiEdit2,
+  FiEye,
   FiFileText,
   FiImage,
   FiPlus,
@@ -13,6 +14,7 @@ import {
 import { toast, ToastContainer } from "react-toastify";
 import NoteModal from "./noteModal";
 import Image from "next/image";
+import ShowNoteModal from "./ShowNoteModal";
 
 type NoteCategory = "text" | "image" | "file" | "other";
 
@@ -36,6 +38,8 @@ export default function Page() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedNote, setSelectedNote] = useState<NoteRecord | null>(null);
+  const [isShowModalOpen, setIsShowModalOpen] = useState(false);
+  const [showNote, setShowNote] = useState<NoteRecord | null>(null);
 
   const totalNotes = notes.length;
   const withImagesCount = useMemo(
@@ -88,6 +92,16 @@ export default function Page() {
   function closeModal() {
     setIsModalOpen(false);
     setSelectedNote(null);
+  }
+
+  function openShowModal(note: NoteRecord) {
+    setShowNote(note);
+    setIsShowModalOpen(true);
+  }
+
+  function closeShowModal() {
+    setShowNote(null);
+    setIsShowModalOpen(false);
   }
 
   function handleSaved(savedNote: NoteRecord) {
@@ -273,7 +287,7 @@ export default function Page() {
                     style={{ whiteSpace: "pre-wrap" }}
                     className="mt-3 text-sm leading-7 text-base-content/75 sm:text-base"
                   >
-                    {note.details}
+                    {note.details?.slice(0, 200)}
                   </p>
 
                   {note.images.length > 0 ? (
@@ -319,6 +333,14 @@ export default function Page() {
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
+                        onClick={() => openShowModal(note)}
+                        className="inline-flex items-center gap-1 rounded-full border border-base-300 bg-base-200 px-3 py-1.5 text-xs font-semibold text-base-content/80 hover:border-primary/40 hover:text-primary"
+                      >
+                        <FiEye size={12} />
+                        View
+                      </button>
+                      <button
+                        type="button"
                         onClick={() => openEditModal(note)}
                         className="inline-flex items-center gap-1 rounded-full border border-base-300 bg-base-200 px-3 py-1.5 text-xs font-semibold text-base-content/80 hover:border-primary/40 hover:text-primary"
                       >
@@ -348,6 +370,10 @@ export default function Page() {
           note={selectedNote}
           onSaved={handleSaved}
         />
+      ) : null}
+
+      {isShowModalOpen && showNote ? (
+        <ShowNoteModal note={showNote} closeModal={closeShowModal} />
       ) : null}
     </section>
   );
