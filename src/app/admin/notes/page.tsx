@@ -269,7 +269,10 @@ export default function Page() {
                   <h2 className="mt-4 text-xl font-bold text-base-content">
                     {note.title}
                   </h2>
-                  <p className="mt-3 text-sm leading-7 text-base-content/75 sm:text-base">
+                  <p
+                    style={{ whiteSpace: "pre-wrap" }}
+                    className="mt-3 text-sm leading-7 text-base-content/75 sm:text-base"
+                  >
                     {note.details}
                   </p>
 
