@@ -16,6 +16,13 @@ import NoteModal from "./noteModal";
 import Image from "next/image";
 import Linkify from "react-linkify";
 import ShowNoteModal from "./ShowNoteModal";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Admin Notes - Manage your notes with ease",
+  description:
+    "Admin interface for managing notes with text, images, and file references. Create, edit, and organize your notes efficiently.",
+};
 
 type NoteCategory = "text" | "image" | "file" | "other";
 

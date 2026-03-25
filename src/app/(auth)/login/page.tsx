@@ -1,9 +1,15 @@
 "use client";
 
+import { Metadata } from "next";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { FiLock, FiLogIn, FiMail } from "react-icons/fi";
+
+export const metadata: Metadata = {
+  title: "Admin Login",
+  description: "Sign in to access the admin dashboard.",
+};
 
 export default function Page() {
   const router = useRouter();

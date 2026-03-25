@@ -1,17 +1,10 @@
 "use client";
 
 import { formatDate } from "@/lib/formatDate";
-import { useState } from "react";
 import Image from "next/image";
-import {
-  FiCheck,
-  FiCopy,
-  FiExternalLink,
-  FiFileText,
-  FiImage,
-  FiX,
-} from "react-icons/fi";
+import { FiExternalLink, FiFileText, FiImage, FiX } from "react-icons/fi";
 import Linkify from "react-linkify";
+import CodeMirrorViewer from "@/_components/codeView/CodeMirrorViewer";
 
 type NoteCategory = "text" | "image" | "file" | "other";
 
@@ -29,6 +22,44 @@ type NoteRecord = {
   updatedAt: string;
 };
 
+function detectLang(code: string): string {
+  const value = code.trim();
+  const lower = value.toLowerCase();
+
+  if (!value) return "text";
+
+  if (/^(\{|\[)[\s\S]*(\}|\])$/.test(value)) return "json";
+  if (/\b(import\s+asyncio|def\s+\w+\s*\(|class\s+\w+\s*:)/.test(value)) {
+    return "python";
+  }
+  if (
+    /\b(const|let|var|function|export|interface|type)\b/.test(value) ||
+    value.includes("=>")
+  ) {
+    return "javascript";
+  }
+  if (/<\/?(html|head|body|main|section|div|span|p|h[1-6])\b/i.test(value)) {
+    return "html";
+  }
+  if (
+    /\b(select|insert|update|delete)\b[\s\S]*\b(from|into|set)\b/i.test(value)
+  ) {
+    return "sql";
+  }
+  if (/^\s*[-\w\s]+:\s*.+/m.test(value) && lower.includes(":")) return "yaml";
+  if (/^\s*#\s+.+/m.test(value) || /```[\s\S]+```/.test(value))
+    return "markdown";
+  if (/^\s*<\?xml\b|<\/?[\w:-]+\b[^>]*>/i.test(value)) return "xml";
+  if (/\b(fn\s+main\s*\(|let\s+mut\s+|impl\s+\w+)/.test(value)) return "rust";
+  if (/\b(public\s+class\s+\w+|System\.out\.println\s*\()/i.test(value)) {
+    return "java";
+  }
+  if (/\b(#include\s*[<"]|std::|int\s+main\s*\()/i.test(value)) return "cpp";
+  if (/\b(<\?php|->|\$\w+)/.test(value)) return "php";
+
+  return "text";
+}
+
 export default function ShowNoteModal({
   note,
   closeModal,
@@ -36,18 +67,6 @@ export default function ShowNoteModal({
   note: NoteRecord;
   closeModal: () => void;
 }) {
-  const [copied, setCopied] = useState(false);
-
-  async function handleCopy() {
-    try {
-      await navigator.clipboard.writeText(note.details || "");
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 1500);
-    } catch {
-      setCopied(false);
-    }
-  }
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-md">
       <button
@@ -57,7 +76,7 @@ export default function ShowNoteModal({
         className="absolute inset-0"
       />
 
-      <div className="relative z-10 max-h-[92vh] w-full max-w-2xl overflow-y-auto rounded-3xl border border-base-300/80 bg-base-100/95 p-6 shadow-[0_24px_80px_rgba(0,0,0,0.28)] ring-1 ring-base-100/40 sm:p-8">
+      <div className="relative z-10 max-h-[92vh] w-full max-w-6xl overflow-y-auto rounded-3xl border border-base-300/80 bg-base-100/95 p-6 shadow-[0_24px_80px_rgba(0,0,0,0.28)] ring-1 ring-base-100/40 sm:p-8">
         <button
           type="button"
           onClick={closeModal}
@@ -85,24 +104,34 @@ export default function ShowNoteModal({
                   file
                 </span>
               ) : null}
-              <button
-                type="button"
-                onClick={handleCopy}
-                aria-label="Copy note details"
-                className="inline-flex items-center gap-1.5 rounded-full border border-base-300 bg-base-200/70 px-3 py-1 text-base-content/75 transition-all hover:border-primary/30 hover:bg-primary/10 hover:text-primary"
-              >
-                {copied ? <FiCheck size={12} /> : <FiCopy size={12} />}
-                {copied ? "Copied" : "Copy"}
-              </button>
             </div>
 
             <h2 className="text-2xl font-bold tracking-tight text-base-content">
               {note.title}
             </h2>
 
-            <p className="text-sm leading-7 text-base-content/80 whitespace-pre-wrap">
+            {detectLang(note.details) == "text" ? (
+              <p className="text-sm leading-7 text-base-content/80 whitespace-pre-wrap">
+                {note.details}
+              </p>
+            ) : (
+              <div>
+                <CodeMirrorViewer
+                  code={note.details || ""}
+                  fileName={`${note.title}.txt`}
+                />
+              </div>
+            )}
+
+            {/* <p className="text-sm leading-7 text-base-content/80 whitespace-pre-wrap">
               {note.details}
-            </p>
+            </p> */}
+            {/* <div>
+              <CodeMirrorViewer
+                code={note.details || ""}
+                fileName={`${note.title}.txt`}
+              />
+            </div> */}
 
             {note.images.length > 0 ? (
               <div className="space-y-3">

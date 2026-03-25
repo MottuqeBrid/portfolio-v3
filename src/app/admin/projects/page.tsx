@@ -17,6 +17,13 @@ import { formatDate } from "@/lib/formatDate";
 import Image from "next/image";
 import { toast, ToastContainer } from "react-toastify";
 import Swal from "sweetalert2";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Admin projects",
+  description:
+    "Manage portfolio projects, including details, tech stack, and public visibility.",
+};
 
 type ProjectRecord = ProjectInstance & {
   _id?: string;

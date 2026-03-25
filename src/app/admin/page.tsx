@@ -13,7 +13,12 @@ import Recentprojects from "./Recentprojects";
 import RecentNotes from "./RecentNotes";
 import RecentEmails from "./RecentEmails";
 import ResumeUpdate from "./ResumeUpdata";
+import { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "Admin Dashboard",
+  description: "Overview of projects, notes, and inbox for admin management.",
+};
 type ProjectActivity = {
   _id: string;
   title: string;
