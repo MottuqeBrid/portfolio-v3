@@ -203,3 +203,11 @@ hr {
 .padding-inline {
   padding-inline: 0;
 }
+
+.linkify a {
+  @apply text-[var(--color-primary)] underline;
+}
+
+.linkify a:hover {
+  @apply text-[var(--color-primary-dark)];
+}

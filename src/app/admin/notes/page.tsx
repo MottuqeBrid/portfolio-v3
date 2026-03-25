@@ -14,6 +14,7 @@ import {
 import { toast, ToastContainer } from "react-toastify";
 import NoteModal from "./noteModal";
 import Image from "next/image";
+import Linkify from "react-linkify";
 import ShowNoteModal from "./ShowNoteModal";
 
 type NoteCategory = "text" | "image" | "file" | "other";
@@ -259,104 +260,106 @@ export default function Page() {
               {notes.map((note) => (
                 <article
                   key={note._id}
-                  className="rounded-3xl border border-base-300 bg-base-100/85 p-5 shadow-sm"
+                  className="rounded-3xl border border-base-300 bg-base-100/85 p-5 shadow-sm linkify"
                 >
-                  <div className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em]">
-                    <span className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-primary">
-                      {note.category}
-                    </span>
-                    {note.images.length > 0 ? (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-sky-500/15 px-3 py-1 text-sky-600">
-                        <FiImage size={12} />
-                        {note.images.length} image
-                        {note.images.length > 1 ? "s" : ""}
+                  <Linkify>
+                    <div className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em]">
+                      <span className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-primary">
+                        {note.category}
                       </span>
-                    ) : null}
-                    {note.file?.url ? (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-3 py-1 text-amber-600">
-                        <FiFileText size={12} />
-                        file
-                      </span>
-                    ) : null}
-                  </div>
-
-                  <h2 className="mt-4 text-xl font-bold text-base-content">
-                    {note.title}
-                  </h2>
-                  <p
-                    style={{ whiteSpace: "pre-wrap" }}
-                    className="mt-3 text-sm leading-7 text-base-content/75 sm:text-base"
-                  >
-                    {note.details?.slice(0, 200)}
-                  </p>
-
-                  {note.images.length > 0 ? (
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {note.images?.map((image) => (
-                        <a
-                          key={image}
-                          href={image}
-                          target="_blank"
-                          download={image}
-                          rel="noopener noreferrer"
-                          className="truncate rounded-xl border border-base-300 bg-base-200/70 px-3 py-2"
-                        >
-                          <Image
-                            width={60}
-                            height={60}
-                            src={image}
-                            alt={note.title}
-                            className="h-12 w-12 rounded object-cover"
-                          />
-                        </a>
-                      ))}
+                      {note.images.length > 0 ? (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-sky-500/15 px-3 py-1 text-sky-600">
+                          <FiImage size={12} />
+                          {note.images.length} image
+                          {note.images.length > 1 ? "s" : ""}
+                        </span>
+                      ) : null}
+                      {note.file?.url ? (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-3 py-1 text-amber-600">
+                          <FiFileText size={12} />
+                          file
+                        </span>
+                      ) : null}
                     </div>
-                  ) : null}
 
-                  {note.file?.url ? (
-                    <a
-                      href={note.file.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-4 inline-flex items-center gap-2 rounded-full border border-base-300 bg-base-200 px-3 py-1.5 text-xs font-semibold text-base-content/75 hover:text-primary"
+                    <h2 className="mt-4 text-xl font-bold text-base-content">
+                      {note.title}
+                    </h2>
+                    <p
+                      style={{ whiteSpace: "pre-wrap" }}
+                      className="mt-3 text-sm leading-7 text-base-content/75 sm:text-base"
                     >
-                      <FiFileText size={12} />
-                      {note.file.filename || "Attached file"}
-                    </a>
-                  ) : null}
-
-                  <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
-                    <p className="text-xs text-base-content/60">
-                      Updated {formatDate(note.updatedAt || note.createdAt)}
+                      {note.details?.slice(0, 200)}
                     </p>
 
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => openShowModal(note)}
-                        className="inline-flex items-center gap-1 rounded-full border border-base-300 bg-base-200 px-3 py-1.5 text-xs font-semibold text-base-content/80 hover:border-primary/40 hover:text-primary"
+                    {note.images.length > 0 ? (
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        {note.images?.map((image) => (
+                          <a
+                            key={image}
+                            href={image}
+                            target="_blank"
+                            download={image}
+                            rel="noopener noreferrer"
+                            className="truncate rounded-xl border border-base-300 bg-base-200/70 px-3 py-2"
+                          >
+                            <Image
+                              width={60}
+                              height={60}
+                              src={image}
+                              alt={note.title}
+                              className="h-12 w-12 rounded object-cover"
+                            />
+                          </a>
+                        ))}
+                      </div>
+                    ) : null}
+
+                    {note.file?.url ? (
+                      <a
+                        href={note.file.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-4 inline-flex items-center gap-2 rounded-full border border-base-300 bg-base-200 px-3 py-1.5 text-xs font-semibold text-base-content/75 hover:text-primary"
                       >
-                        <FiEye size={12} />
-                        View
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => openEditModal(note)}
-                        className="inline-flex items-center gap-1 rounded-full border border-base-300 bg-base-200 px-3 py-1.5 text-xs font-semibold text-base-content/80 hover:border-primary/40 hover:text-primary"
-                      >
-                        <FiEdit2 size={12} />
-                        Edit note
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => void handleDelete(note._id)}
-                        className="inline-flex items-center gap-1 rounded-full border border-red-300 bg-red-500/10 px-3 py-1.5 text-xs font-semibold text-red-600"
-                      >
-                        <FiTrash2 size={12} />
-                        Delete
-                      </button>
+                        <FiFileText size={12} />
+                        {note.file.filename || "Attached file"}
+                      </a>
+                    ) : null}
+
+                    <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
+                      <p className="text-xs text-base-content/60">
+                        Updated {formatDate(note.updatedAt || note.createdAt)}
+                      </p>
+
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => openShowModal(note)}
+                          className="inline-flex items-center gap-1 rounded-full border border-base-300 bg-base-200 px-3 py-1.5 text-xs font-semibold text-base-content/80 hover:border-primary/40 hover:text-primary"
+                        >
+                          <FiEye size={12} />
+                          View
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => openEditModal(note)}
+                          className="inline-flex items-center gap-1 rounded-full border border-base-300 bg-base-200 px-3 py-1.5 text-xs font-semibold text-base-content/80 hover:border-primary/40 hover:text-primary"
+                        >
+                          <FiEdit2 size={12} />
+                          Edit note
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => void handleDelete(note._id)}
+                          className="inline-flex items-center gap-1 rounded-full border border-red-300 bg-red-500/10 px-3 py-1.5 text-xs font-semibold text-red-600"
+                        >
+                          <FiTrash2 size={12} />
+                          Delete
+                        </button>
+                      </div>
                     </div>
-                  </div>
+                  </Linkify>
                 </article>
               ))}
             </div>
