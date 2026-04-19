@@ -62,7 +62,7 @@ export default function Projects({ id }: { id: string }) {
             <span className="inline-flex rounded-full border border-primary/20 bg-primary/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.24em] text-primary">
               Projects
             </span>
-            <h2
+            {/* <h2
               id="projects-heading"
               className="text-3xl font-bold tracking-tight text-base-content sm:text-4xl lg:text-5xl"
             >
@@ -72,10 +72,10 @@ export default function Projects({ id }: { id: string }) {
               This section follows your project schema directly, so each card is
               a compact preview and the modal exposes the full record including
               long description, features, links, timestamps, and asset fields.
-            </p>
+            </p> */}
           </div>
 
-          <div className="grid gap-5 xl:grid-cols-3">
+          <div className="grid gap-5 xl:grid-cols-2">
             {projects.length > 0 ? (
               projects.map((project, index) => (
                 <article
